@@ -1,0 +1,38 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { getEntry } from "astro:content";
+import { formatDate } from "../../utils";
+import Tags from "../../components/Tags.astro";
+
+const { slug } = Astro.params;
+if (!slug) throw new Error("No slug provided");
+const entry = await getEntry("blog", slug);  
+
+if (!entry) {
+  return Astro.redirect("/404");
+}
+
+const { Content } = await entry.render();
+
+---
+
+<MainLayout>
+  <h1>Article</h1>
+  <article>
+    <h1 class="text-4xl font-bold mb-2">
+      { entry.data.title }
+    </h1>
+    <h3 class="text-lg mb-2">Written by {entry.data.author} on {formatDate(entry.data.pubDate)}</h3>
+    <Tags tags={entry.data.tags} />
+    <img src={'/images/'+entry.data.image} alt="" class="my-4">
+    <Content />
+  </article>
+</MainLayout>
+
+<style is:global>
+    p {
+        max-width: 800px;
+        margin: 20px auto;
+    }
+
+</style>
