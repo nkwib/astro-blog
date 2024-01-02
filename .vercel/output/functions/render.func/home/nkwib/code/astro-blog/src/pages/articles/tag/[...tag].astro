@@ -1,0 +1,29 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "../../../components/ArticleCard.astro";
+import { capitalize } from "../../../utils";
+
+const allBlogArticles: CollectionEntry<"blog">[] = (
+  await getCollection("blog")
+).sort((a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) => {
+  return (
+    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
+});
+
+const { tag } = Astro.params;
+
+const tagArticles = allBlogArticles.filter((a) => a.data.tags.includes(tag as string));
+---
+
+<MainLayout>
+  <a href="/articles" class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500 hover:text-white">Back To Articles</a>
+  <h1 class="text-2xl pb-3">#{capitalize(tag as string)}</h1>
+  <!-- Main Grid -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Article Card -->
+    {tagArticles.map((a) => <ArticleCard article={a} />)}
+  </div>
+</MainLayout>

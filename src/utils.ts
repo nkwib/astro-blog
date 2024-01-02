@@ -24,7 +24,7 @@ export function getAssetImg(imagePath: string): () => Promise<{default: ImageMet
   let img = images;
   if (!img) {
     images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/*.{jpeg,jpg,png,gif}');
-    let img = images;
+    img = images;
   }
   let path = '/src/assets/' + imagePath;
   if (!img[path]) throw new Error(`"${path}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);

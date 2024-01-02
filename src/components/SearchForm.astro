@@ -10,7 +10,9 @@ import { Search } from "lucide-react";
   class="flex items-center gap-3"
   action="/articles/search"
 >
-  <Label for="query" className="sr-only">Search</Label>
-  <Input type="text" name="query" placeholder="Search" required />
+  <Label className="sr-only">
+    Search
+    <Input type="text" name="query" placeholder="Search" required />
+  </Label>
   <Button type="submit"><Search size="1em" /></Button>
 </form>
