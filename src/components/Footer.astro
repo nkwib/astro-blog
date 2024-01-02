@@ -2,49 +2,84 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { capitalize } from "../utils";
+import { Separator } from "@/components/ui/separator";
+import { Github, Linkedin, Mail, Instagram } from "lucide-react";
 
-const allBlogArticles: CollectionEntry<'blog'>[] = await getCollection('blog');
+const allBlogArticles: CollectionEntry<"blog">[] = await getCollection("blog");
 
-const tags: string[] = allBlogArticles.flatMap((article: any) => article.data.tags);
+const tags: string[] = allBlogArticles.flatMap(
+  (article: any) => article.data.tags
+);
 
 const uniqueTags: string[] = [...new Set(tags)];
+
+const contacts = [
+  {
+    name: "Email",
+    icon: Mail,
+    url: "mailto:gabrigmm@gmail.com",
+  },
+  {
+    name: "LinkedIn",
+    icon: Linkedin,
+    url: "https://www.linkedin.com/in/gabrielemagno",
+  },
+  {
+    name: "Github",
+    icon: Github,
+    url: "https://github.com/nkwib",
+  },
+  {
+    name: "Instagram",
+    icon: Instagram,
+    url: "https://www.instagram.com/gabriele_magno/",
+  },
+];
 ---
 
-<footer class="bg-indigo-900 text-white">
+<footer>
   <div class="container mx-auto mt-10 max-w-screen-xl px-8">
-    <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="mt-10">
-        <h3 class="text-xl font-semibold mb-4">About</h3>
-        <p class="text-white text-sm">
-          TechPeople is a blog for tech enthusiasts. We publish articles,
-          stories and tutorials about the latest technology trends and
-          advancements.
-        </p>
+    <Separator />
+    <div class="grid md:grid-cols-[1fr,auto,1fr] mt-4">
+      <div class="grid md:grid-rows-[auto,auto,auto]">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">About</h3>
+          <p>
+            TechPeople is a blog for tech enthusiasts. We publish articles,
+            stories and tutorials about the latest technology trends and
+            advancements.
+          </p>
+        </div>
+        <Separator />
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Contact</h3>
+          <ul>
+            {
+              contacts.map((c) => (
+                <li class="mb-2">
+                  <a href={c.url} target="_blank" rel="noopener noreferrer">
+                    <c.icon className="inline-block mr-2" size="1.5rem" />
+                    {c.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </div>
-      <div class="mt-10">
+      <Separator orientation="vertical" className="mx-4" />
+      <div class="text-right">
         <h3 class="text-xl font-semibold mb-4">Categories</h3>
-        <ul class="text-white text-sm">
-          {uniqueTags.map(tag => (
-            <li class="mb-2">
-              <a href={'/articles/tag/' + tag}>#{capitalize(tag)}</a>  
-            </li>
-          ))}
+        <ul>
+          {
+            uniqueTags.map((tag) => (
+              <li class="mb-2">
+                <a href={"/articles/tag/" + tag}>#{capitalize(tag)}</a>
+              </li>
+            ))
+          }
         </ul>
       </div>
-      <div class="mt-10">
-        <h3 class="text-xl font-semibold mb-4">Contact</h3>
-        <ul class="text-white text-sm">
-          <li class="mb-2">
-            <a href="#">Email</a>
-          </li>
-          <li class="mb-2">
-            <a href="#">Twitter</a>
-          </li>
-          <li class="mb-2">
-            <a href="#">Facebook</a>
-          </li>
-          <li class="mb-2">
-            <a href="#">Instagram</a>
-          </li>
-        </ul>
+    </div>
+  </div>
 </footer>

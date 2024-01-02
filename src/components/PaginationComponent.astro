@@ -1,0 +1,72 @@
+---
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { PAGES_TO_SHOW_IN_PAGINATION } from "@/constants";
+
+const { currentPage, totalPages, disablePrevious, disableNext } = Astro.props;
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  disablePrevious: boolean;
+  disableNext: boolean;
+}
+
+const pagesToShow = PAGES_TO_SHOW_IN_PAGINATION;
+
+const pages = Array.from({ length: pagesToShow }, (_, i) => {
+  if (currentPage === 1) {
+    return i + 1;
+  } else if (currentPage === totalPages) {
+    return totalPages - pagesToShow + i + 1;
+  } else {
+    return currentPage - 2 + i;
+  }
+}).filter((page) => page > 0 && page <= totalPages);
+
+const ellipsisBefore = currentPage > 3;
+const ellipsisAfter = currentPage < totalPages - 2;
+---
+
+<!-- use isActive attribute on current Page -->
+<Pagination className="mt-10">
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious
+        href={"/articles?page=" + (currentPage - 1)}
+        className={disablePrevious ? "text-gray-400 pointer-events-none" : ""}
+      />
+    </PaginationItem>
+    <PaginationItem hidden={!ellipsisBefore}>
+      <PaginationEllipsis />
+    </PaginationItem>
+    {
+      pages.map((page) => (
+        <PaginationItem key={page}>
+          <PaginationLink
+            href={"/articles?page=" + page}
+            isActive={page === currentPage}
+          >
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+      ))
+    }
+    <PaginationItem hidden={!ellipsisAfter}>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext
+        href={"/articles?page=" + (currentPage + 1)}
+        className={disableNext ? "text-gray-400 pointer-events-none" : ""}
+      />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
