@@ -2,7 +2,7 @@
 title: 'This is a placeholder title'
 pubDate: 2024-01-02
 author: 'Gabriele Magno'
-image: 'image1.png'
+image: '/src/assets/image1.png'
 tags: ['test', 'testing']
 slug: my-first-post
 ---

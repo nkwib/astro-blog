@@ -1,5 +1,5 @@
 ---
-import { formatDate, getAssetImg } from "../utils";
+import { formatDate } from "../utils";
 import type { CollectionEntry } from "astro:content";
 import Tags from "./Tags.astro";
 import { Image } from "astro:assets";
@@ -9,12 +9,22 @@ const { article } = Astro.props;
 interface Props {
   article: CollectionEntry<"blog">;
 }
+
+const { image } = Astro.props.article.data;
+console.log(image);
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/*.{jpeg,jpg,png,gif}"
+);
+if (!images[image])
+  throw new Error(
+    `"${image}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`
+  );
 ---
 
 <div class="relative inline-block w-full sm:w-auto cursor-pointer rounded-2xl">
   <a href={"/articles/" + article.slug}>
     <Image
-      src={getAssetImg(article.data.image)()}
+      src={images[image]()}
       alt="Article Image"
       class="w-full h-auto rounded-2xl"
     />

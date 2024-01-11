@@ -1,5 +1,5 @@
 ---
-import { formatDate, getAssetImg } from "../utils";
+import { formatDate } from "../utils";
 import type { CollectionEntry } from "astro:content";
 import Tags from "./Tags.astro";
 const { article } = Astro.props;
@@ -17,14 +17,16 @@ interface Props {
   article: CollectionEntry<"blog">;
 }
 
-const imagePath = article.data.image;
+const { image } = Astro.props.article.data;
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/*.{jpeg,jpg,png,gif}');
+if (!images[image]) throw new Error(`"${image}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
 
 ---
 
 <Card className="max-w-md mx-auto mt-10">
   <CardHeader>
     <Image
-      src={getAssetImg(article.data.image)()}
+      src={images[image]()}
       alt="Article Image"
       class="h-auto rounded-sm"
     />

@@ -1,7 +1,7 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import { getEntry } from "astro:content";
-import { formatDate, getAssetImg } from "../../utils";
+import { formatDate } from "../../utils";
 import Tags from "../../components/Tags.astro";
 import { Image } from "astro:assets";
 
@@ -15,6 +15,10 @@ if (!entry) {
 
 const { Content } = await entry.render();
 
+const { image } = entry.data;
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/*.{jpeg,jpg,png,gif}');
+if (!images[image]) throw new Error(`"${image}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
+
 ---
 
 <MainLayout>
@@ -27,7 +31,7 @@ const { Content } = await entry.render();
     <Tags tags={entry.data.tags} />
     
       <Image
-        src={getAssetImg(entry.data.image)()}
+        src={images[image]()}
         alt="Article Image"
         class="my-4 rounded-lg"
       />
